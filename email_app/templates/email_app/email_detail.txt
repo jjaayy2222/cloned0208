@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Email Details</h2>
+
+  <!-- 모달 버튼 (사용자가 이메일을 클릭하면 모달이 나타남) -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#emailModal">
+    View Email
+  </button>
+
+  <!-- 모달 -->
+  <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailModalLabel">{{ email.subject }}</h5> <!-- 제목 -->
+          <!-- X 버튼 (모달을 닫을 수 있게 해줌) -->
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>From:</strong> {{ email.sender.username }}</p>
+          <p><strong>To:</strong> {{ email.recipient.username }}</p>
+          <p><strong>Sent At:</strong> {{ email.sent_at|date:"F d, Y H:i" }}</p>
+          <hr>
+          <p>{{ email.body }}</p>
+        </div>
+        <div class="modal-footer">
+          <a href="{% url 'email_list' %}" class="btn btn-secondary">Back to List</a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+<!-- Bootstrap JS 및 jQuery 추가 (모달 작동을 위한 필수 요소들) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>

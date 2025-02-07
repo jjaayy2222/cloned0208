@@ -97,9 +97,10 @@
                                     <strong>{{ user.username }}</strong>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end text-small shadow">
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                                    <li><a class="dropdown-item" href="#">My Gallery</a></li>
-                                    <li><a class="dropdown-item" href="#">My Community</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'profile_update' %}"> 프로필 수정 </a></li>  <!-- 프로필 경로 -->
+                                    <li><a class="dropdown-item" href="{% url 'email_list' %}"> 메일 목록 </a></li>
+                                    <li><a class="dropdown-item" href="/app/gallery/my/"> 내 갤러리 </a></li>
+                                    <li><a class="dropdown-item" href="/app/gallery/public/"> 내 커뮤니티 </a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>

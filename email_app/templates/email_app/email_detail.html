@@ -1,19 +1,57 @@
-{% extends "base.html" %}
+{% load crispy_forms_tags %}
 
-{% block content %}
-  <h2>Email Details</h2>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✉️ 메일 상세 페이지 ✉️</title>
 
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title font-weight-bold">{{ email.subject }}</h5> <!-- 제목 강조 -->
-      <p class="card-text">
-        <strong>From:</strong> {{ email.sender.username }}<br>
-        <strong>To:</strong> {{ email.recipient.username }}<br>
-        <strong>Sent At:</strong> {{ email.sent_at|date:"F d, Y H:i" }}<br>
-      </p>
-      <p>{{ email.body }}</p>
-      <a href="{% url 'email_list' %}" class="btn btn-secondary">Back to List</a>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* 닫기 버튼 스타일 */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 모달 버튼 (사용자가 이메일을 클릭하면 모달이 나타남) -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal">
+        View Email
+    </button>
+
+    <!-- 모달 -->
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailModalLabel">{{ email.subject }}</h5> <!-- 제목 -->
+                    <!-- X 버튼 (모달을 닫을 수 있게 해줌) -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>From:</strong> {{ email.sender.username }}</p>
+                    <p><strong>To:</strong> {{ email.recipient.username }}</p>
+                    <p><strong>Sent At:</strong> {{ email.sent_at|date:"F d, Y H:i" }}</p>
+                    <hr>
+                    <p>{{ email.body }}</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'email_list' %}" class="btn btn-secondary">Back to List</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-{% endblock %}
+    <!-- Bootstrap JS 추가 (모달 작동을 위한 필수 요소들) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

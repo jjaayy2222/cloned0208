@@ -380,7 +380,7 @@ def comment_detail(request, pk):
 
 @login_required
 def custom_admin(request):
-    return redirect("admin")  # 관리자 페이지로 리디렉션
+    return redirect("/admin/")  # 관리자 페이지로 리디렉션
 
 
 def home(request):
@@ -422,14 +422,15 @@ def art_gal(request):
 def index_ai(request):
     return render(request, "app/index_ai.html")
 
-
+@login_required
 def send_email(request):
     return render(request, "email_app/send_email.html")
 
-
+@login_required
 def email_list(request):
     return render(request, "email_app/email_list.html")
 
-
+@login_required
 def email_detail(request, email_id):
     return render(request, "email_app/email_detail.html")
+

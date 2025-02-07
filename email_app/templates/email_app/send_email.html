@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load crispy_forms_tags %}
 
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Email</title>
-    <!-- Bootstrap CSS 링크 추가 (필요 시) -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>📬 메일 보내기 📬</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        /* 닫기 버튼 스타일 */
         .close-button {
             position: absolute;
             top: 10px;
@@ -17,53 +21,103 @@
         }
     </style>
 </head>
-
 <body>
-    <!-- 네비게이션 바 등 추가 가능 -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
-    </nav>
-    <div class="container">
-        <div class="close-button" onclick="window.close()">×</div>
-        <h2>Send Email</h2>
-        <!-- 메시지 출력 부분 -->
-        {% if messages %}
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">📬 내 메일 목록 📬</a>
+</nav>
+
+<div class="container mt-4">
+    <!-- 메시지 출력 -->
+    {% if messages %}
         <div class="alert alert-info">
             {% for message in messages %}
-            <p>{{ message }}</p>
+                <p>{{ message }}</p>
             {% endfor %}
         </div>
-        {% endif %}
-        <form method="post" class="form-horizontal">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_recipient" class="col-sm-2 control-label">Recipient</label>
-                <div class="col-sm-10">
-                    {{ form.recipient|as_crispy_field }}
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="id_subject" class="col-sm-2 control-label">Subject</label>
-                <div class="col-sm-10">
-                    {{ form.subject|as_crispy_field }}
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="id_body" class="col-sm-2 control-label">Body</label>
-                <div class="col-sm-10">
-                    {{ form.body|as_crispy_field }}
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-10 col-sm-offset-2">
-                    <button type="submit" class="btn btn-primary">Send</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <!-- Bootstrap JS 및 jQuery (필요 시) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    {% endif %}
 
+    <!-- 이메일 보내기 버튼 (모달 열기) -->
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal">📤 메일 보내기 📤</button>
+
+    <!-- 이메일 보내기 모달 -->
+    <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailModalLabel">📤 메일 보내기 📤</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 폼 -->
+                    <form method="post" id="sendEmailForm" class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_recipient" class="col-sm-2 control-label">Recipient</label>
+                            <div class="col-sm-10">
+                                {{ form.recipient|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_subject" class="col-sm-2 control-label">Subject</label>
+                            <div class="col-sm-10">
+                                {{ form.subject|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_body" class="col-sm-2 control-label">Body</label>
+                            <div class="col-sm-10">
+                                {{ form.body|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" form="sendEmailForm" class="btn btn-primary">Send</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS 및 jQuery (필요 시) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#sendEmailForm").submit(function (event) {
+            event.preventDefault();  // 기본 제출 방지
+
+            let formData = $(this).serialize();
+            let csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'send_email' %}",  // Django URL 연결
+                data: formData,
+                headers: { "X-CSRFToken": csrfToken },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $("#emailModal").modal("hide");  // 모달 닫기
+                        location.reload();  // 이메일 리스트 새로고침
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function () {
+                    alert("An unexpected error occurred.");
+                }
+            });
+        });
+    });
+</script>
+
+</body>
 </html>

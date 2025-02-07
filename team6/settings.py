@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     # third party apps
     "django_bootstrap5",
     "corsheaders",
+    'crispy_forms', # 추가
+    'crispy_bootstrap5', # 추가
     # custom apps
     "app",
     "accounts",
@@ -106,6 +108,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "team6.wsgi.application"
+
+# Crispy Forms 설정
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
 # Database
@@ -236,7 +242,7 @@ AZURE_DALLE_ENDPOINT = env("AZURE_DALLE_ENDPOINT")
 AZURE_DALLE_API_KEY = env("AZURE_DALLE_API_KEY")
 AZURE_DALLE_API_VERSION = env("AZURE_DALLE_API_VERSION")
 
-# Azure Speech Service 설정
+# Azure Speech API Key
 AZURE_SPEECH_API_KEY = env("AZURE_SPEECH_API_KEY")
 AZURE_SPEECH_SERVICE_REGION = env("AZURE_SPEECH_SERVICE_REGION")
 

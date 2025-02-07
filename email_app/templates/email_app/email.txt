@@ -1,4 +1,4 @@
-{% extends "app/main.html" %}
+{% extends "base.html" %}
 
 {% block content %}
   <h2>📧 이메일 목록 📧</h2>
@@ -22,7 +22,7 @@
             <th scope="row">{{ forloop.counter }}</th>
             <td><a href="{% url 'email_details' email.id %}" class="btn btn-link">{{ email.subject }}</a></td>
             <td>{{ email.sender.username }}</td>
-            <td>{{ email.recipient.username }}</td>  <!-- 수정된 부분: recipient.username -->
+            <td>{{ email.recipient.username }}</td>
             <td>{{ email.sent_at|date:"F d, Y H:i" }}</td>
             <td>
               <!-- 이메일 삭제 버튼 -->
@@ -41,17 +41,17 @@
     </table>
   </div>
 
-  <!-- 페이지네이션 추가 -->
+  <!-- 페이지네이션 추가 (필요한 경우) -->
   <div class="d-flex justify-content-center">
     <nav aria-label="Email Pagination">
       <ul class="pagination">
-        <li class="page-item {% if emails.has_previous %}enabled{% else %}disabled{% endif %}" aria-disabled="{% if emails.has_previous %}false{% else %}true{% endif %}">
+        <li class="page-item {% if emails.has_previous %}{% else %}disabled{% endif %}">
           <a class="page-link" href="?page={{ emails.previous_page_number }}" tabindex="-1">Previous</a>
         </li>
         <li class="page-item disabled">
           <a class="page-link" href="#">{{ emails.number }}</a>
         </li>
-        <li class="page-item {% if emails.has_next %}enabled{% else %}disabled{% endif %}" aria-disabled="{% if emails.has_next %}false{% else %}true{% endif %}">
+        <li class="page-item {% if emails.has_next %}{% else %}disabled{% endif %}">
           <a class="page-link" href="?page={{ emails.next_page_number }}">Next</a>
         </li>
       </ul>
